@@ -1,6 +1,8 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { fetchGallery } from "./js/fetchGallery";
 import createGallery from "./js/createMarkup";
+import { createSimpleLightBox, destroySimpleLightBox } from "./js/simpleLightBoxLibrarie";
+import { pageScrolling, infiniteScroll, scroll } from "./js/otherUsedLibraries";
 
 // DOM елементи
 const formREF = document.querySelector("#search-form");
@@ -27,6 +29,7 @@ submitBtn.style.backgroundColor = "orange";
 let page = 1;
 const perPage = 40;
 
+window.addEventListener("scroll", infiniteScroll);
 formREF.addEventListener("submit", onFormSubmit);
 loadMoreBtn.addEventListener("click", onLoadMoreBtnClick);
 
@@ -48,18 +51,21 @@ function onFormSubmit(event) {
       galleryREF.innerHTML = "";
       loadMoreBtn.style.display = "block";
       createGallery(images.hits);
+      createSimpleLightBox();
       Notify.success(`Hooray! We found ${images.totalHits} images.`);
     })
     .catch(error => console.log(error));
 }
 
-
-function onLoadMoreBtnClick() {
+export function onLoadMoreBtnClick() {
   const searchImage = formREF.elements.searchQuery.value;
   page += 1;
+  destroySimpleLightBox();
   fetchGallery(searchImage, page, perPage)
     .then(images => {
       createGallery(images.hits);
+      createSimpleLightBox();
+      pageScrolling();
       const totalPages = images.totalHits / perPage;
       if (page > totalPages) {
         loadMoreBtn.style.display = "none";

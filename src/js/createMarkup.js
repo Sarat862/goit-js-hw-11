@@ -3,10 +3,12 @@ export default createGallery ;
     
 const galleryREF = document.querySelector(".gallery");
 
-function markupGallery({ webformatURL, tags, likes, views, comments, downloads }) {
-return `<div class="photo-card">
-  <img src="${webformatURL}" alt="${tags}" loading="lazy" width="600px" height="400px"/>
-  <div class="info" style="display: flex; gap: 10px" >
+function markupGallery({ largeImageURL, webformatURL, tags, likes, views, comments, downloads }) {
+  return `<div class="photo-card">
+  <a href="${largeImageURL}">
+    <img src="${webformatURL}" alt="${tags}" loading="lazy" width="500px" height="300px"/>
+  </a>
+  <div class="info" style="display: flex; gap: 10px">
     <p class="info-item">
       <b>Likes: </b>${likes}
     </p>
